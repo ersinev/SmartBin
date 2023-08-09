@@ -27,8 +27,8 @@ const GarbageAnimation = ({ fillPercentage, maxFillLevel }) => {
           {/* Display the bottle.png image */}
           <img
             className="item-image"
-            src={process.env.PUBLIC_URL + "/soda.png"} // Corrected path
-            alt="Soda"
+            src="./cola.png" // Corrected path
+            alt="Cola"
             style={{
               maxWidth: "100%", // Limit the width to fit within the container
               height: "auto", // Maintain aspect ratio
@@ -36,8 +36,8 @@ const GarbageAnimation = ({ fillPercentage, maxFillLevel }) => {
           />
           <img
             className="item-image"
-            src={process.env.PUBLIC_URL + "/cola.png"} // Corrected path
-            alt="Cola"
+            src="./soda.png" // Corrected path
+            alt="Soda"
             style={{
               maxWidth: "100%", // Limit the width to fit within the container
               height: "auto", // Maintain aspect ratio
