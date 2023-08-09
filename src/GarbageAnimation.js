@@ -36,7 +36,7 @@ const GarbageAnimation = ({ fillPercentage, maxFillLevel }) => {
           />
           <img
             className="item-image"
-            src= "./cola.png" // Corrected path
+            src={process.env.PUBLIC_URL + "/cola.png"} // Corrected path
             alt="Cola"
             style={{
               maxWidth: "100%", // Limit the width to fit within the container
