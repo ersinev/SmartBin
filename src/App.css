@@ -4,14 +4,63 @@
 }
 
 .garbage-container {
+  text-align: center;
+  margin-top: 50px;
   width: 200px;
   height: 300px;
   background-color: #eee;
   overflow: hidden;
   margin: 0 auto;
+  border: 2px solid #555;
+
+  /* Adjusted border-radius for "V" shape with wider bottom */
+  border-radius: 0 0 50px 50px;
 }
 
 .garbage {
   width: 100%;
   background-color: #3498db;
+  position: relative;
+}
+
+.empty-part {
+  background-color: #eee;
+  width: 100%;
+}
+
+.filled-part {
+  width: 100%;
+  background-color: #e74c3c;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+
+  /* Adjust vertical alignment to start from the bottom */
+  justify-content: flex-end;
+}
+
+.item-image {
+  max-width: 80%;
+  height: auto;
+  margin: 5px 0;
+}
+.fill {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+.capsules-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.capsule {
+  border-radius: 50%;
+  border: 1px solid black; /* Add border to capsules for visibility */
+  
 }

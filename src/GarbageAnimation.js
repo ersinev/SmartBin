@@ -1,53 +1,57 @@
 import React from "react";
-import { animated } from "react-spring";
 
-const GarbageAnimation = ({ fillPercentage, maxFillLevel }) => {
-  const parentHeight = 300; // Height of the parent container
-  const filledHeight = (fillPercentage / 100) * parentHeight;
-  const emptyHeight = parentHeight - filledHeight;
+const GarbageAnimation = ({ fillPercentage }) => {
+  const parentHeight = 500; // Height of the parent container
+  const parentWidth = 250; // Width of the parent container
+  const capsuleMargin = 6; // Margin around each capsule
+  const capsuleCount = 8; // Number of capsules
+  const capsuleHeight =
+    (parentHeight - capsuleMargin * (capsuleCount - 1)) / capsuleCount;
+
+  const colors = [
+    "#7F0000",
+    "#A70000",
+    "#D40000",
+    "#FF0000",
+    "#FF2525",
+    "#FF5252",
+    "#FF7B7B",
+    "#FFBABA",
+  ];
+  const capsules = [];
+  for (let i = 0; i < capsuleCount; i++) {
+    const capsuleColor =
+      i >= capsuleCount - Math.floor(fillPercentage / (100 / capsuleCount))
+        ? colors[i]
+        : "white";
+
+    capsules.push(
+      <div
+        key={i}
+        className="capsule"
+        style={{
+          width: `${parentWidth}px`,
+          height: `${capsuleHeight}px`,
+          backgroundColor: capsuleColor,
+          marginBottom: i < capsuleCount - 1 ? capsuleMargin : 0,
+          marginTop: i > 0 ? capsuleMargin : 0,
+        }}
+      />
+    );
+  }
 
   return (
     <div
       className="garbage-container"
-      style={{ height: `${parentHeight}px`, backgroundColor: "lightblue" }}
+      style={{
+        height: `${parentHeight + capsuleHeight}px`,
+        width: `${parentWidth}px`,
+        overflow: "hidden",
+        padding: "5px",
+      }}
     >
-      <div className="garbage">
-        <div
-          className="empty-part"
-          style={{ height: `${emptyHeight}px`, backgroundColor: "lightblue" }}
-        ></div>
-        <animated.div
-          className="filled-part"
-          style={{
-            height: `${filledHeight}px`,
-            backgroundColor: "red",
-            position: "relative", // Position images within the red part
-          }}
-        >
-          {/* Display the bottle.png image */}
-          <img
-            className="item-image"
-            src="./cola.png" // Corrected path
-            alt="Cola"
-            style={{
-              maxWidth: "100%", // Limit the width to fit within the container
-              height: "auto", // Maintain aspect ratio
-            }}
-          />
-          <img
-            className="item-image"
-            src="./soda.png" // Corrected path
-            alt="Soda"
-            style={{
-              maxWidth: "100%", // Limit the width to fit within the container
-              height: "auto", // Maintain aspect ratio
-            }}
-          />
-        </animated.div>
-      </div>
-      
+      <div className="capsules-container">{capsules}</div>
     </div>
-    
   );
 };
 
