@@ -68,7 +68,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Garbage Animation</h1>
+      <h1>Garbage Animations</h1>
       <div className="input-table">
         <div className="input-row">
           <div className="input-cell">
