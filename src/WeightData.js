@@ -19,7 +19,7 @@ const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, 
           }
         );
         const data = await response.json();
-        console.log(data)
+        
         
 
         if (data.length > 0) {
