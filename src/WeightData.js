@@ -19,11 +19,13 @@ const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, 
           }
         );
         const data = await response.json();
+        console.log(data)
+        
 
         if (data.length > 0) {
-          const latestData = data[data.length - 1];
+          const latestData = data[0];
           const newWeight = latestData.value;
-          setWeight(newWeight);
+          setWeight(Math.floor(newWeight));
           onWeightChange(newWeight);
         }
       } catch (error) {
@@ -31,7 +33,7 @@ const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, 
       }
     };
 
-    const interval = setInterval(fetchWeightData, 1000); // Fetch data every 1000ms
+    const interval = setInterval(fetchWeightData, 3000); // Fetch data every 1000ms
 
     return () => {
       clearInterval(interval);
@@ -40,7 +42,7 @@ const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, 
 
   return (
     <div className="weight-data">
-      <h2>Weight Data: {weight} gr</h2>
+      <h2><span style={{color:"#3498db"}}>Weight:</span> {weight} gr</h2>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import React from "react";
 
 const GarbageAnimation = ({ fillPercentage }) => {
-  const parentHeight = 500; // Height of the parent container
+  const parentHeight = 300; // Height of the parent container
   const parentWidth = 250; // Width of the parent container
-  const capsuleMargin = 6; // Margin around each capsule
+  const capsuleMargin = 2; // Margin around each capsule
   const capsuleCount = 8; // Number of capsules
   const capsuleHeight =
     (parentHeight - capsuleMargin * (capsuleCount - 1)) / capsuleCount;
