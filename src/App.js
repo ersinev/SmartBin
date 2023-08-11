@@ -167,7 +167,7 @@ function App() {
               maxFillLevel={maxFillLevel}
               fillPercentage={fillPercentage}
             />
-            <p>Garbage Fill Percentage: {fillPercentage.toFixed(2)}%</p>
+            <p>Garbage Fill Percentage:  {fillPercentage.toFixed(2)}%</p>
           </Col>
         </Row>
       </div>
