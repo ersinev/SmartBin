@@ -47,7 +47,7 @@ const WeightData = ({
   return (
     <div className="weight-data">
       <h2>
-        <span style={{ color: "#3498db" }}>Weight:</span>{weight} gr
+        <span style={{ color: "#3498db" }}>Weight:</span> {weight} gr
       </h2>
     </div>
   );
