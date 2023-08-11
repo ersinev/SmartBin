@@ -1,1 +1,1 @@
-WEBSITE: https://afvalbin.netlify.app/
+WEBSITE: https://afval-bin.netlify.app/
