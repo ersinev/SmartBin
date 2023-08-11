@@ -1,6 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, fetchingData }) => {
+const WeightData = ({
+  onWeightChange,
+  adafruitUsername,
+  feedKey,
+  adafruitIoKey,
+  fetchingData,
+}) => {
   const [weight, setWeight] = useState(0);
 
   useEffect(() => {
@@ -14,13 +20,11 @@ const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, 
           `https://io.adafruit.com/api/v2/${adafruitUsername}/feeds/${feedKey}/data`,
           {
             headers: {
-              'X-AIO-Key': adafruitIoKey,
+              "X-AIO-Key": adafruitIoKey,
             },
           }
         );
         const data = await response.json();
-        
-        
 
         if (data.length > 0) {
           const latestData = data[0];
@@ -29,7 +33,7 @@ const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, 
           onWeightChange(newWeight);
         }
       } catch (error) {
-        console.error('Error fetching weight data:', error);
+        console.error("Error fetching weight data:", error);
       }
     };
 
@@ -42,7 +46,9 @@ const WeightData = ({ onWeightChange, adafruitUsername, feedKey, adafruitIoKey, 
 
   return (
     <div className="weight-data">
-      <h2><span style={{color:"#3498db"}}>Weight:</span> {weight} gr</h2>
+      <h2>
+        <span style={{ color: "#3498db" }}>Weight:</span> {weight} gr
+      </h2>
     </div>
   );
 };

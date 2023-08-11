@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import GarbageAnimation from "./GarbageAnimation";
 import WeightData from "./WeightData";
+import { Container, Row, Col } from "react-bootstrap";
 
 function App() {
   const [fillPercentage, setFillPercentage] = useState(0);
   const [adafruitUsername, setAdafruitUsername] = useState("");
   const [feedKey, setFeedKey] = useState("");
   const [adafruitIoKey, setAdafruitIoKey] = useState("");
-  const [schoolName, setSchoolName] = useState(""); // New state for School Name
-  const [className, setClassName] = useState(""); // New state for Class Name
+  const [schoolName, setSchoolName] = useState("");
+  const [originalSchoolName, setOriginalSchoolName] = useState("");
+  const [className, setClassName] = useState("");
+  const [originalClassName, setOriginalClassName] = useState("");
   const [fetchingData, setFetchingData] = useState(false);
   const [savedData, setSavedData] = useState([]);
+  const [isHidden, setisHidden] = useState(true);
 
   const maxFillLevel = 1000;
 
   useEffect(() => {
-    // Load data from local storage when the component mounts
     const storedData = localStorage.getItem("savedData");
     if (storedData) {
       setSavedData(JSON.parse(storedData));
@@ -28,14 +31,20 @@ function App() {
     setFillPercentage(fillPercentage);
   };
 
-  const startFetching = () => {
+  const startFetching = (data) => {
     setFetchingData(true);
+    setOriginalSchoolName(data.schoolName);
+    setOriginalClassName(data.className);
+    setAdafruitUsername(data.adafruitUsername);
+    setFeedKey(data.feedKey);
+    setAdafruitIoKey(data.adafruitIoKey);
+    setisHidden(false);
   };
 
   const saveData = () => {
     const newData = {
-      schoolName,
-      className,
+      schoolName: fetchedSchoolName || schoolName,
+      className: fetchedClassName || className,
       adafruitUsername,
       feedKey,
       adafruitIoKey,
@@ -43,7 +52,13 @@ function App() {
     const updatedSavedData = [...savedData, newData];
     setSavedData(updatedSavedData);
 
-    // Save data to local storage
+    // Clear the input fields after saving
+    setSchoolName("");
+    setClassName("");
+    setAdafruitUsername("");
+    setFeedKey("");
+    setAdafruitIoKey("");
+
     localStorage.setItem("savedData", JSON.stringify(updatedSavedData));
   };
 
@@ -51,114 +66,114 @@ function App() {
     const newSavedData = savedData.filter((_, i) => i !== index);
     setSavedData(newSavedData);
 
-    // Update local storage after deleting data
     localStorage.setItem("savedData", JSON.stringify(newSavedData));
   };
 
-  const handleUseSavedData = (index) => {
-    const selectedData = savedData[index];
-    if (selectedData) {
-      setSchoolName(selectedData.schoolName);
-      setClassName(selectedData.className);
-      setAdafruitUsername(selectedData.adafruitUsername);
-      setFeedKey(selectedData.feedKey);
-      setAdafruitIoKey(selectedData.adafruitIoKey);
-    }
-  };
+  // Separate state variables for fetched data
+  const [fetchedSchoolName, setFetchedSchoolName] = useState("");
+  const [fetchedClassName, setFetchedClassName] = useState("");
 
   return (
-    <div className="app">
-      <h1>Garbage Animations</h1>
-      <div className="input-table">
-        <div className="input-row">
-          <div className="input-cell">
-            <label>School Name</label>
-            <input
-              type="text"
-              value={schoolName}
-              onChange={(e) => setSchoolName(e.target.value)}
-            />
-          </div>
-          <div className="input-cell">
-            <label>Class Name</label>
-            <input
-              type="text"
-              value={className}
-              onChange={(e) => setClassName(e.target.value)}
-            />
-          </div>
-          <div className="input-cell">
-            <label>Adafruit Username</label>
-            <input
-              type="text"
-              value={adafruitUsername}
-              onChange={(e) => setAdafruitUsername(e.target.value)}
-            />
-          </div>
-          <div className="input-cell">
-            <label>Feed Key</label>
-            <input
-              type="text"
-              value={feedKey}
-              onChange={(e) => setFeedKey(e.target.value)}
-            />
-          </div>
-          <div className="input-cell">
-            <label>Adafruit IO Key</label>
-            <input
-              type="text"
-              value={adafruitIoKey}
-              onChange={(e) => setAdafruitIoKey(e.target.value)}
-            />
-          </div>
-          <div className="input-cell">
-            <button onClick={startFetching}>Start Fetching</button>
-          </div>
-          <div className="input-cell">
-            <button onClick={saveData}>Save</button>
+    <Container fluid>
+      <div className="app">
+        <h1>Garbage Animations</h1>
+        <div className="input-table">
+          <div className="input-row">
+            <div className="input-cell">
+              <label>School Name</label>
+              <input
+                type="text"
+                value={schoolName}
+                onChange={(e) => setSchoolName(e.target.value)}
+              />
+            </div>
+            <div className="input-cell">
+              <label>Class Name</label>
+              <input
+                type="text"
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+              />
+            </div>
+            <div className="input-cell">
+              <label>Adafruit Username</label>
+              <input
+                type="text"
+                value={adafruitUsername}
+                onChange={(e) => setAdafruitUsername(e.target.value)}
+              />
+            </div>
+            <div className="input-cell">
+              <label>Feed Key</label>
+              <input
+                type="text"
+                value={feedKey}
+                onChange={(e) => setFeedKey(e.target.value)}
+              />
+            </div>
+            <div className="input-cell">
+              <label>Adafruit IO Key</label>
+              <input
+                type="text"
+                value={adafruitIoKey}
+                onChange={(e) => setAdafruitIoKey(e.target.value)}
+              />
+            </div>
+            <div className="input-cell">
+              <button onClick={saveData}>Save</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <h2>Saved Data</h2>
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>School Name</th>
-            <th>Class Name</th>
-            <th>Adafruit Username</th>
-            <th>Feed Key</th>
-            <th>Adafruit IO Key</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {savedData.map((data, index) => (
-            <tr key={index}>
-              <td>{data.schoolName}</td>
-              <td>{data.className}</td>
-              <td>{data.adafruitUsername}</td>
-              <td>{data.feedKey}</td>
-              <td>{data.adafruitIoKey}</td>
-              <td>
-                <button id="fetchBtn" onClick={() => handleUseSavedData(index)}>Use</button>
-                <button id="saveBtn" onClick={() => deleteSavedData(index)}>Delete</button>
-              </td>
+        <h2>Saved Data</h2>
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>School Name</th>
+              <th>Class Name</th>
+              <th>Adafruit Username</th>
+              <th>Feed Key</th>
+              <th>Adafruit IO Key</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {savedData.map((data, index) => (
+              <tr key={index}>
+                <td>{data.schoolName}</td>
+                <td>{data.className}</td>
+                <td>{data.adafruitUsername}</td>
+                <td>{data.feedKey}</td>
+                <td>{data.adafruitIoKey}</td>
+                <td>
+                  <button onClick={() => startFetching(data)}>Start Fetching</button>
+                  <button onClick={() => deleteSavedData(index)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      <WeightData
-        onWeightChange={handleWeightChange}
-        adafruitUsername={adafruitUsername}
-        feedKey={feedKey}
-        adafruitIoKey={adafruitIoKey}
-        fetchingData={fetchingData}
-      />
-      <GarbageAnimation maxFillLevel={maxFillLevel} fillPercentage={fillPercentage} />
-      <p>Garbage Fill Percentage: {fillPercentage.toFixed(2)}%</p>
-    </div>
+        <Row hidden={isHidden}>
+          <Col md={4}>
+            <div>{originalSchoolName || fetchedSchoolName || schoolName}</div>
+            <div>{originalClassName || fetchedClassName || className}</div>
+            <WeightData
+              onWeightChange={handleWeightChange}
+              adafruitUsername={adafruitUsername}
+              feedKey={feedKey}
+              adafruitIoKey={adafruitIoKey}
+              fetchingData={fetchingData}
+            />
+            <GarbageAnimation
+              maxFillLevel={maxFillLevel}
+              fillPercentage={fillPercentage}
+            />
+            <p>Garbage Fill Percentage: {fillPercentage.toFixed(2)}%</p>
+          </Col>
+        </Row>
+      </div>
+    </Container>
   );
 }
 
