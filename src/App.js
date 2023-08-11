@@ -43,8 +43,8 @@ function App() {
 
   const saveData = () => {
     const newData = {
-      schoolName: fetchedSchoolName || schoolName,
-      className: fetchedClassName || className,
+      schoolName: schoolName,
+      className:  className,
       adafruitUsername,
       feedKey,
       adafruitIoKey,
@@ -70,9 +70,7 @@ function App() {
   };
 
   // Separate state variables for fetched data
-  const [fetchedSchoolName, setFetchedSchoolName] = useState("");
-  const [fetchedClassName, setFetchedClassName] = useState("");
-
+  
   return (
     <Container fluid>
       <div className="app">
@@ -156,8 +154,8 @@ function App() {
 
         <Row hidden={isHidden}>
           <Col md={4}>
-            <div>{originalSchoolName || fetchedSchoolName || schoolName}</div>
-            <div>{originalClassName || fetchedClassName || className}</div>
+            <div>{originalSchoolName || schoolName}</div>
+            <div>{originalClassName || className}</div>
             <WeightData
               onWeightChange={handleWeightChange}
               adafruitUsername={adafruitUsername}
