@@ -10,11 +10,10 @@ function App() {
   const [adafruitIoKey, setAdafruitIoKey] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [className, setClassName] = useState("");
+  const [capacity, setCapacity] = useState(1000); // Default capacity
   const [fetchingData, setFetchingData] = useState(false);
   const [savedData, setSavedData] = useState([]);
   const [hiddenSections, setHiddenSections] = useState([]);
-
-  const maxFillLevel = 1000;
 
   useEffect(() => {
     const storedData = localStorage.getItem("savedData");
@@ -31,6 +30,14 @@ function App() {
     );
   };
 
+  const handleCapacityChange = (index, newCapacity) => {
+    setSavedData((prevSavedData) =>
+      prevSavedData.map((data, dataIndex) =>
+        dataIndex === index ? { ...data, capacity: newCapacity } : data
+      )
+    );
+  };
+
   const startFetching = (data) => {
     setFetchingData(true);
     setSchoolName(data.schoolName);
@@ -38,6 +45,7 @@ function App() {
     setAdafruitUsername(data.adafruitUsername);
     setFeedKey(data.feedKey);
     setAdafruitIoKey(data.adafruitIoKey);
+    setCapacity(data.capacity); // Set the capacity from saved data
     setHiddenSections((prevHiddenSections) => [
       ...prevHiddenSections,
       { data, weight: 0 },
@@ -46,11 +54,12 @@ function App() {
 
   const saveData = () => {
     const newData = {
-      schoolName: schoolName,
-      className: className,
+      schoolName,
+      className,
       adafruitUsername,
       feedKey,
       adafruitIoKey,
+      capacity, // Save the capacity
     };
     const updatedSavedData = [...savedData, newData];
     setSavedData(updatedSavedData);
@@ -60,6 +69,7 @@ function App() {
     setAdafruitUsername("");
     setFeedKey("");
     setAdafruitIoKey("");
+    setCapacity(1000); // Reset capacity to default
 
     localStorage.setItem("savedData", JSON.stringify(updatedSavedData));
   };
@@ -138,6 +148,7 @@ function App() {
                   <th>Adafruit Username</th>
                   <th>Feed Key</th>
                   <th>Adafruit IO Key</th>
+                  <th>Capacity</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -149,6 +160,15 @@ function App() {
                     <td>{data.adafruitUsername}</td>
                     <td>{data.feedKey}</td>
                     <td>{data.adafruitIoKey}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={data.capacity}
+                        onChange={(e) =>
+                          handleCapacityChange(index, Number(e.target.value))
+                        }
+                      />
+                    </td>
                     <td>
                       <button onClick={() => startFetching(data)}>
                         Start Fetching
@@ -195,11 +215,11 @@ function App() {
                 fetchingData={fetchingData}
               />
               <GarbageAnimation
-                fillPercentage={(section.weight / maxFillLevel) * 100}
+                fillPercentage={(section.weight / capacity) * 100}
               />
               <p>
                 Garbage Fill Percentage:{" "}
-                {((section.weight / maxFillLevel) * 100).toFixed(2)}%
+                {((section.weight / capacity) * 100).toFixed(2)}%
               </p>
             </div>
           ))}
