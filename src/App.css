@@ -165,3 +165,16 @@ button:hover {
   background-color: #2980b9;
 
 }
+
+.hidden-sections-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  
+  margin-top: 20px;
+}
+
+.hidden-section {
+   /* Four sections per row with 20px margin */
+  margin-left: 10px;
+}

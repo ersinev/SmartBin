@@ -2,20 +2,17 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import GarbageAnimation from "./GarbageAnimation";
 import WeightData from "./WeightData";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 function App() {
-  const [fillPercentage, setFillPercentage] = useState(0);
   const [adafruitUsername, setAdafruitUsername] = useState("");
   const [feedKey, setFeedKey] = useState("");
   const [adafruitIoKey, setAdafruitIoKey] = useState("");
   const [schoolName, setSchoolName] = useState("");
-  const [originalSchoolName, setOriginalSchoolName] = useState("");
   const [className, setClassName] = useState("");
-  const [originalClassName, setOriginalClassName] = useState("");
   const [fetchingData, setFetchingData] = useState(false);
   const [savedData, setSavedData] = useState([]);
-  const [isHidden, setisHidden] = useState(true);
+  const [hiddenSections, setHiddenSections] = useState([]);
 
   const maxFillLevel = 1000;
 
@@ -26,25 +23,31 @@ function App() {
     }
   }, []);
 
-  const handleWeightChange = (newWeight) => {
-    const fillPercentage = (newWeight / maxFillLevel) * 100;
-    setFillPercentage(fillPercentage);
+  const handleWeightChange = (dataIndex, newWeight) => {
+    setHiddenSections((prevHiddenSections) =>
+      prevHiddenSections.map((section, index) =>
+        index === dataIndex ? { ...section, weight: newWeight } : section
+      )
+    );
   };
 
   const startFetching = (data) => {
     setFetchingData(true);
-    setOriginalSchoolName(data.schoolName);
-    setOriginalClassName(data.className);
+    setSchoolName(data.schoolName);
+    setClassName(data.className);
     setAdafruitUsername(data.adafruitUsername);
     setFeedKey(data.feedKey);
     setAdafruitIoKey(data.adafruitIoKey);
-    setisHidden(false);
+    setHiddenSections((prevHiddenSections) => [
+      ...prevHiddenSections,
+      { data, weight: 0 },
+    ]);
   };
 
   const saveData = () => {
     const newData = {
       schoolName: schoolName,
-      className:  className,
+      className: className,
       adafruitUsername,
       feedKey,
       adafruitIoKey,
@@ -52,7 +55,6 @@ function App() {
     const updatedSavedData = [...savedData, newData];
     setSavedData(updatedSavedData);
 
-    // Clear the input fields after saving
     setSchoolName("");
     setClassName("");
     setAdafruitUsername("");
@@ -66,11 +68,13 @@ function App() {
     const newSavedData = savedData.filter((_, i) => i !== index);
     setSavedData(newSavedData);
 
+    setHiddenSections((prevHiddenSections) =>
+      prevHiddenSections.filter((_, i) => i !== index)
+    );
+
     localStorage.setItem("savedData", JSON.stringify(newSavedData));
   };
 
-  // Separate state variables for fetched data
-  
   return (
     <Container fluid>
       <div className="app">
@@ -124,52 +128,82 @@ function App() {
         </div>
 
         <h2>Saved Data</h2>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>School Name</th>
-              <th>Class Name</th>
-              <th>Adafruit Username</th>
-              <th>Feed Key</th>
-              <th>Adafruit IO Key</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {savedData.map((data, index) => (
-              <tr key={index}>
-                <td>{data.schoolName}</td>
-                <td>{data.className}</td>
-                <td>{data.adafruitUsername}</td>
-                <td>{data.feedKey}</td>
-                <td>{data.adafruitIoKey}</td>
-                <td>
-                  <button onClick={() => startFetching(data)}>Start Fetching</button>
-                  <button onClick={() => deleteSavedData(index)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Container fluid>
+          <div className="data-table">
+            <table style={{ width: "100%" }}>
+              <thead>
+                <tr>
+                  <th>School Name</th>
+                  <th>Class Name</th>
+                  <th>Adafruit Username</th>
+                  <th>Feed Key</th>
+                  <th>Adafruit IO Key</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {savedData.map((data, index) => (
+                  <tr key={index}>
+                    <td>{data.schoolName}</td>
+                    <td>{data.className}</td>
+                    <td>{data.adafruitUsername}</td>
+                    <td>{data.feedKey}</td>
+                    <td>{data.adafruitIoKey}</td>
+                    <td>
+                      <button onClick={() => startFetching(data)}>
+                        Start Fetching
+                      </button>
+                      <button onClick={() => deleteSavedData(index)}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Container>
 
-        <Row hidden={isHidden}>
-          <Col md={4}>
-            <div>{originalSchoolName || schoolName}</div>
-            <div>{originalClassName || className}</div>
-            <WeightData
-              onWeightChange={handleWeightChange}
-              adafruitUsername={adafruitUsername}
-              feedKey={feedKey}
-              adafruitIoKey={adafruitIoKey}
-              fetchingData={fetchingData}
-            />
-            <GarbageAnimation
-              maxFillLevel={maxFillLevel}
-              fillPercentage={fillPercentage}
-            />
-            <p>Garbage Fill Percentage:  {fillPercentage.toFixed(2)}%</p>
-          </Col>
-        </Row>
+        <div className="hidden-sections-container">
+          {hiddenSections.map((section, index) => (
+            <div key={index} className="hidden-section">
+              <div className="section-header">
+                <div className="section-header-school">
+                  <span>{section.data.schoolName}</span>
+                  <button
+                    className="close-button"
+                    onClick={() =>
+                      setHiddenSections((prevHiddenSections) =>
+                        prevHiddenSections.filter((_, i) => i !== index)
+                      )
+                    }
+                  >
+                    Close
+                  </button>
+                </div>
+                <div className="section-header-class">
+                  {section.data.className}
+                </div>
+              </div>
+              <WeightData
+                onWeightChange={(newWeight) =>
+                  handleWeightChange(index, newWeight)
+                }
+                adafruitUsername={section.data.adafruitUsername}
+                feedKey={section.data.feedKey}
+                adafruitIoKey={section.data.adafruitIoKey}
+                fetchingData={fetchingData}
+              />
+              <GarbageAnimation
+                fillPercentage={(section.weight / maxFillLevel) * 100}
+              />
+              <p>
+                Garbage Fill Percentage:{" "}
+                {((section.weight / maxFillLevel) * 100).toFixed(2)}%
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </Container>
   );
