@@ -37,7 +37,7 @@ const WeightData = ({
       }
     };
 
-    const interval = setInterval(fetchWeightData, 3000); // Fetch data every 1000ms
+    const interval = setInterval(fetchWeightData, 3000); // Fetch data every 3000ms
 
     return () => {
       clearInterval(interval);

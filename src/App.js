@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import GarbageAnimation from "./GarbageAnimation";
+import Chart from "./Chart";
 import WeightData from "./WeightData";
 import { Container } from "react-bootstrap";
 
@@ -10,7 +11,7 @@ function App() {
   const [adafruitIoKey, setAdafruitIoKey] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [className, setClassName] = useState("");
-  const [capacity, setCapacity] = useState(1000); // Default capacity
+  const [capacity, setCapacity] = useState(1000);
   const [fetchingData, setFetchingData] = useState(false);
   const [savedData, setSavedData] = useState([]);
   const [hiddenSections, setHiddenSections] = useState([]);
@@ -38,17 +39,46 @@ function App() {
     );
   };
 
-  const startFetching = (data) => {
+  const fetchChartData = async (section, index) => {
+    try {
+      const response = await fetch(
+        `https://io.adafruit.com/api/v2/${section.data.adafruitUsername}/feeds/${section.data.feedKey}/data`,
+        {
+          headers: {
+            "X-AIO-Key": section.data.adafruitIoKey,
+          },
+        }
+      );
+      const chartData = await response.json();
+
+      setHiddenSections((prevHiddenSections) =>
+        prevHiddenSections.map((s, i) =>
+          i === index ? { ...s, chartData, showChart: true } : s
+        )
+      );
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    }
+  };
+
+  const toggleChart = (index) => {
+    setHiddenSections((prevHiddenSections) =>
+      prevHiddenSections.map((section, i) =>
+        i === index ? { ...section, showChart: !section.showChart } : section
+      )
+    );
+  };
+
+  const startFetching = async (data) => {
     setFetchingData(true);
     setSchoolName(data.schoolName);
     setClassName(data.className);
     setAdafruitUsername(data.adafruitUsername);
     setFeedKey(data.feedKey);
     setAdafruitIoKey(data.adafruitIoKey);
-    setCapacity(data.capacity); // Set the capacity from saved data
     setHiddenSections((prevHiddenSections) => [
       ...prevHiddenSections,
-      { data, weight: 0 },
+      { data: { ...data }, weight: 0, showChart: false, chartData: [] },
     ]);
   };
 
@@ -59,17 +89,17 @@ function App() {
       adafruitUsername,
       feedKey,
       adafruitIoKey,
-      capacity, // Save the capacity
+      capacity,
     };
     const updatedSavedData = [...savedData, newData];
-    setSavedData(updatedSavedData);
 
+    setSavedData(updatedSavedData);
     setSchoolName("");
     setClassName("");
     setAdafruitUsername("");
     setFeedKey("");
     setAdafruitIoKey("");
-    setCapacity(1000); // Reset capacity to default
+    setCapacity(1000);
 
     localStorage.setItem("savedData", JSON.stringify(updatedSavedData));
   };
@@ -85,8 +115,19 @@ function App() {
     localStorage.setItem("savedData", JSON.stringify(newSavedData));
   };
 
+  const renderCapacityInput = (data, index) => {
+    return (
+      <input
+        type="number"
+        value={data.capacity}
+        onChange={(e) => handleCapacityChange(index, Number(e.target.value))}
+      />
+    );
+  };
+
   return (
     <Container fluid>
+      <img src={require("./logo.png")} alt="Logo" />
       <div className="app">
         <h1>Garbage Animations</h1>
         <div className="input-table">
@@ -132,6 +173,12 @@ function App() {
               />
             </div>
             <div className="input-cell">
+            <label>Capacity</label>
+              {renderCapacityInput(
+                savedData /* provide the correct index here */
+              )}
+            </div>
+            <div className="input-cell">
               <button onClick={saveData}>Save</button>
             </div>
           </div>
@@ -160,15 +207,7 @@ function App() {
                     <td>{data.adafruitUsername}</td>
                     <td>{data.feedKey}</td>
                     <td>{data.adafruitIoKey}</td>
-                    <td>
-                      <input
-                        type="number"
-                        value={data.capacity}
-                        onChange={(e) =>
-                          handleCapacityChange(index, Number(e.target.value))
-                        }
-                      />
-                    </td>
+                    <td>{renderCapacityInput(data, index)}</td>
                     <td>
                       <button onClick={() => startFetching(data)}>
                         Start Fetching
@@ -190,6 +229,23 @@ function App() {
               <div className="section-header">
                 <div className="section-header-school">
                   <span>{section.data.schoolName}</span>
+                </div>
+                <div className="section-header-class">
+                  {section.data.className}
+                </div>
+                <div className="section-header-buttons">
+                  <button
+                    className="chart-button"
+                    onClick={() => {
+                      if (!section.showChart) {
+                        fetchChartData(section, index);
+                      } else {
+                        toggleChart(index);
+                      }
+                    }}
+                  >
+                    {section.showChart ? "Bin" : "Chart"}
+                  </button>
                   <button
                     className="close-button"
                     onClick={() =>
@@ -198,29 +254,40 @@ function App() {
                       )
                     }
                   >
-                    Close
+                    X
                   </button>
                 </div>
-                <div className="section-header-class">
-                  {section.data.className}
-                </div>
               </div>
-              <WeightData
-                onWeightChange={(newWeight) =>
-                  handleWeightChange(index, newWeight)
-                }
-                adafruitUsername={section.data.adafruitUsername}
-                feedKey={section.data.feedKey}
-                adafruitIoKey={section.data.adafruitIoKey}
-                fetchingData={fetchingData}
-              />
-              <GarbageAnimation
-                fillPercentage={(section.weight / capacity) * 100}
-              />
-              <p>
-                Garbage Fill Percentage:{" "}
-                {((section.weight / capacity) * 100).toFixed(2)}%
-              </p>
+              {section.showChart ? (
+                <Chart
+                  data={section.chartData}
+                  style={{ width: "100%", height: "300px" }}
+                />
+              ) : (
+                <>
+                  <WeightData
+                    onWeightChange={(newWeight) =>
+                      handleWeightChange(index, newWeight)
+                    }
+                    adafruitUsername={section.data.adafruitUsername}
+                    feedKey={section.data.feedKey}
+                    adafruitIoKey={section.data.adafruitIoKey}
+                    fetchingData={fetchingData}
+                  />
+                  <GarbageAnimation
+                    fillPercentage={
+                      (section.weight / section.data.capacity) * 100
+                    }
+                  />
+                  <p>
+                    Garbage Fill Percentage:{" "}
+                    {((section.weight / section.data.capacity) * 100).toFixed(
+                      2
+                    )}
+                    %
+                  </p>
+                </>
+              )}
             </div>
           ))}
         </div>

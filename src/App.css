@@ -1,7 +1,15 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .app {
   text-align: center;
   margin-top: 50px;
+ 
 }
+
 /*--------------------------------------GARBAGE----------------------------------------------------*/
 .garbage-container {
   text-align: center;
@@ -12,6 +20,8 @@
   overflow: hidden;
   margin: 0 auto;
   border: 2px solid #555;
+  
+  
 
   /* Adjusted border-radius for "V" shape with wider bottom */
   border-radius: 0 0 50px 50px;
@@ -19,7 +29,7 @@
 
 .garbage {
   width: 100%;
-  background-color: #3498db;
+  
   position: relative;
 }
 
@@ -140,7 +150,7 @@
 }
 
 .data-table th {
-  background-color: #3498db;
+  background-color: #42A790;
   color: white;
 }
 
@@ -149,7 +159,7 @@
 }
 
 button{
-  background-color: #3498db;
+  background-color: #269dc1;
 
   padding: 8px 16px;
   
@@ -165,6 +175,10 @@ button:hover {
   background-color: #2980b9;
 
 }
+.close-button{
+  background-color: #e74c3c;
+}
+
 
 .hidden-sections-container {
   display: flex;
