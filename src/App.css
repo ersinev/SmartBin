@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -7,7 +7,6 @@
 .app {
   text-align: center;
   margin-top: 50px;
- 
 }
 
 /*--------------------------------------GARBAGE----------------------------------------------------*/
@@ -20,16 +19,12 @@
   overflow: hidden;
   margin: 0 auto;
   border: 2px solid #555;
-  
-  
-
   /* Adjusted border-radius for "V" shape with wider bottom */
   border-radius: 0 0 50px 50px;
 }
 
 .garbage {
   width: 100%;
-  
   position: relative;
 }
 
@@ -48,7 +43,6 @@
   flex-direction: column;
   align-items: center;
   padding: 10px;
-
   /* Adjust vertical alignment to start from the bottom */
   justify-content: flex-end;
 }
@@ -58,29 +52,26 @@
   height: auto;
   margin: 5px 0;
 }
+
 .fill {
   width: 100%;
   position: absolute;
   bottom: 0;
 }
+
 .capsules-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
- 
 }
 
 .capsule {
   border-radius: 50%;
   border: 1px solid black; /* Add border to capsules for visibility */
-  
- 
-  
 }
 
 /*--------------------------------------INPUT-----------------------------------------------*/
-
 .input-table {
   display: flex;
   flex-direction: column;
@@ -93,7 +84,6 @@
   align-items: flex-end;
   gap: 10px;
   margin-bottom: 10px;
-  
 }
 
 .input-cell {
@@ -136,11 +126,23 @@
 }
 
 /*-------------------------------------------TABLE------------------------------------------------------*/
+/* Scrollable Table Styles */
 .data-table {
   width: 100%;
   border-collapse: collapse;
   border: 2px solid #555;
   margin-top: 20px;
+  max-height: 400px;
+  overflow: auto;
+  /* Adjust margin and padding to remove extra space */
+  margin-bottom: 0;
+  padding: 0;
+  position: relative; /* Required for sticky header */
+}
+
+.scrollable-table {
+  width: 100%;
+  margin-left: 0;
 }
 
 .data-table th,
@@ -152,43 +154,61 @@
 .data-table th {
   background-color: #42A790;
   color: white;
+  position: sticky;
+  top: 0; /* Stick to the top */
+  z-index: 1; /* Ensure header is above other elements */
 }
 
 .data-table td {
   background-color: #eee;
 }
 
-button{
-  background-color: #269dc1;
+.data-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
+button {
+  background-color: #269dc1;
   padding: 8px 16px;
-  
   color: rgb(255, 255, 255);
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   margin-left: 3px;
- 
 }
+
 button:hover {
   background-color: #2980b9;
-
 }
-.close-button{
+
+.close-button {
   background-color: #e74c3c;
 }
-
 
 .hidden-sections-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  
   margin-top: 20px;
 }
 
 .hidden-section {
-   /* Four sections per row with 20px margin */
+  /* Four sections per row with 20px margin */
   margin-left: 10px;
+}
+
+.table-container {
+  max-height: 500px; /* Adjust this value as needed */
+  overflow-y: auto;
+}
+
+/* SearchBar CSS */
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 5px;
 }

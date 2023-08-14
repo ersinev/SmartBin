@@ -3,7 +3,9 @@ import "./App.css";
 import GarbageAnimation from "./GarbageAnimation";
 import Chart from "./Chart";
 import WeightData from "./WeightData";
+import SearchBar from "./SearchBar";
 import { Container } from "react-bootstrap";
+
 
 function App() {
   const [adafruitUsername, setAdafruitUsername] = useState("");
@@ -11,10 +13,11 @@ function App() {
   const [adafruitIoKey, setAdafruitIoKey] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [className, setClassName] = useState("");
-  const [capacity, setCapacity] = useState(1000);
+  const [capacity, setCapacity] = useState(1000); // Initialize capacity
   const [fetchingData, setFetchingData] = useState(false);
   const [savedData, setSavedData] = useState([]);
   const [hiddenSections, setHiddenSections] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const storedData = localStorage.getItem("savedData");
@@ -76,6 +79,7 @@ function App() {
     setAdafruitUsername(data.adafruitUsername);
     setFeedKey(data.feedKey);
     setAdafruitIoKey(data.adafruitIoKey);
+    setCapacity(data.capacity); // Set capacity from user input
     setHiddenSections((prevHiddenSections) => [
       ...prevHiddenSections,
       { data: { ...data }, weight: 0, showChart: false, chartData: [] },
@@ -99,7 +103,7 @@ function App() {
     setAdafruitUsername("");
     setFeedKey("");
     setAdafruitIoKey("");
-    setCapacity(1000);
+    setCapacity(1000); // Reset capacity after saving
 
     localStorage.setItem("savedData", JSON.stringify(updatedSavedData));
   };
@@ -173,10 +177,12 @@ function App() {
               />
             </div>
             <div className="input-cell">
-            <label>Capacity</label>
-              {renderCapacityInput(
-                savedData /* provide the correct index here */
-              )}
+              <label>Capacity</label>
+              <input
+                type="number"
+                value={capacity}
+                onChange={(e) => setCapacity(Number(e.target.value))}
+              />
             </div>
             <div className="input-cell">
               <button onClick={saveData}>Save</button>
@@ -184,10 +190,11 @@ function App() {
           </div>
         </div>
 
-        <h2>Saved Data</h2>
+        <h2>Search Data</h2>
+        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         <Container fluid>
           <div className="data-table">
-            <table style={{ width: "100%" }}>
+            <table className="scrollable-table">
               <thead>
                 <tr>
                   <th>School Name</th>
@@ -200,24 +207,32 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {savedData.map((data, index) => (
-                  <tr key={index}>
-                    <td>{data.schoolName}</td>
-                    <td>{data.className}</td>
-                    <td>{data.adafruitUsername}</td>
-                    <td>{data.feedKey}</td>
-                    <td>{data.adafruitIoKey}</td>
-                    <td>{renderCapacityInput(data, index)}</td>
-                    <td>
-                      <button onClick={() => startFetching(data)}>
-                        Start Fetching
-                      </button>
-                      <button onClick={() => deleteSavedData(index)}>
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {savedData
+                  .filter(
+                    (data) =>
+                      data.schoolName
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      data.className.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((data, index) => (
+                    <tr key={index}>
+                      <td>{data.schoolName}</td>
+                      <td>{data.className}</td>
+                      <td>{data.adafruitUsername}</td>
+                      <td>{data.feedKey}</td>
+                      <td>{data.adafruitIoKey}</td>
+                      <td>{renderCapacityInput(data, index)}</td>
+                      <td>
+                        <button onClick={() => startFetching(data)}>
+                          Start Fetching
+                        </button>
+                        <button onClick={() => deleteSavedData(index)}>
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
