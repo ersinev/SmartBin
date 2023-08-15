@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import Chart from "./Chart";
 import { Container } from "react-bootstrap";
-import GarbageAnimation from "./GarbageAnimation";
-import WeightData from "./WeightData";
-import SearchBar from "./SearchBar";
-import PieChart from "./PieChart";
+import GarbageAnimation from "./GarbageAnimation"
+import WeightData from "./WeightData"
+import SearchBar from "./SearchBar"
+import PieChart from "./PieChart"
+
 
 function App() {
   const [adafruitUsername, setAdafruitUsername] = useState("");
@@ -18,8 +19,6 @@ function App() {
   const [savedData, setSavedData] = useState([]);
   const [hiddenSections, setHiddenSections] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isPieChartVisible, setPieChartVisible] = useState(false);
-  const [chartButtonText, setChartButtonText] = useState("Chart");
 
   useEffect(() => {
     const storedData = localStorage.getItem("savedData");
@@ -66,17 +65,12 @@ function App() {
     }
   };
 
-  const toggleChartType = () => {
-    if (chartButtonText === "Chart") {
-      setChartButtonText("PieChart");
-      setPieChartVisible(false);
-    } else if (chartButtonText === "PieChart") {
-      setChartButtonText("Bin");
-      setPieChartVisible(true);
-    } else {
-      setChartButtonText("Chart");
-      setPieChartVisible(false);
-    }
+  const toggleChart = (index) => {
+    setHiddenSections((prevHiddenSections) =>
+      prevHiddenSections.map((section, i) =>
+        i === index ? { ...section, showChart: !section.showChart } : section
+      )
+    );
   };
 
   const startFetching = async (data) => {
@@ -124,6 +118,16 @@ function App() {
     );
 
     localStorage.setItem("savedData", JSON.stringify(newSavedData));
+  };
+
+  const renderCapacityInput = (data, index) => {
+    return (
+      <input
+        type="number"
+        value={data.capacity}
+        onChange={(e) => handleCapacityChange(index, Number(e.target.value))}
+      />
+    );
   };
 
   return (
@@ -186,6 +190,7 @@ function App() {
             </div>
           </div>
         </div>
+
         <h2>Search Data</h2>
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         <Container fluid>
@@ -209,9 +214,7 @@ function App() {
                       data.schoolName
                         .toLowerCase()
                         .includes(searchTerm.toLowerCase()) ||
-                      data.className
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase())
+                      data.className.toLowerCase().includes(searchTerm.toLowerCase())
                   )
                   .map((data, index) => (
                     <tr key={index}>
@@ -220,18 +223,7 @@ function App() {
                       <td>{data.adafruitUsername}</td>
                       <td>{data.feedKey}</td>
                       <td>{data.adafruitIoKey}</td>
-                      <td>
-                        <input
-                          type="number"
-                          value={data.capacity}
-                          onChange={(e) =>
-                            handleCapacityChange(
-                              index,
-                              Number(e.target.value)
-                            )
-                          }
-                        />
-                      </td>
+                      <td>{renderCapacityInput(data, index)}</td>
                       <td>
                         <button onClick={() => startFetching(data)}>
                           Start Fetching
@@ -246,6 +238,7 @@ function App() {
             </table>
           </div>
         </Container>
+
         <div className="hidden-sections-container">
           {hiddenSections.map((section, index) => (
             <div key={index} className="hidden-section">
@@ -257,17 +250,18 @@ function App() {
                   {section.data.className}
                 </div>
                 <div className="section-header-buttons">
-                <button
-  className="chart-button"
-  onClick={() => {
-    if (!section.showChart) {
-      fetchChartData(section, index);
-    }
-    toggleChartType();
-  }}
->
-  {chartButtonText}
-</button>
+                  <button
+                    className="chart-button"
+                    onClick={() => {
+                      if (!section.showChart) {
+                        fetchChartData(section, index);
+                      } else {
+                        toggleChart(index);
+                      }
+                    }}
+                  >
+                    {section.showChart ? "Bin" : "Chart"}
+                  </button>
                   <button
                     className="close-button"
                     onClick={() =>
@@ -281,35 +275,31 @@ function App() {
                 </div>
               </div>
               <WeightData
-                onWeightChange={(newWeight) =>
-                  handleWeightChange(index, newWeight)
-                }
-                adafruitUsername={section.data.adafruitUsername}
-                feedKey={section.data.feedKey}
-                adafruitIoKey={section.data.adafruitIoKey}
-                fetchingData={fetchingData}
-              />
+                    onWeightChange={(newWeight) =>
+                      handleWeightChange(index, newWeight)
+                    }
+                    adafruitUsername={section.data.adafruitUsername}
+                    feedKey={section.data.feedKey}
+                    adafruitIoKey={section.data.adafruitIoKey}
+                    fetchingData={fetchingData}
+                  />
               <div
-                className={`chart-container ${
-                  section.showChart ? "visible" : "hidden"
-                }`}
+                className={`chart-container ${section.showChart ? "visible" : "hidden"}`}
               >
-                {isPieChartVisible ? (
-                  <PieChart
-                    data={section.chartData}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                ) : (
+                
+               
                   <Chart
+                    
                     data={section.chartData}
                     style={{ width: "100%", height: "100%" }}
                   />
-                )}
+                
               </div>
               {section.showChart ? (
                 <></>
               ) : (
                 <>
+                  
                   <GarbageAnimation
                     fillPercentage={
                       (section.weight / section.data.capacity) * 100
@@ -328,6 +318,8 @@ function App() {
           ))}
         </div>
       </div>
+
+       <PieChart/>               
     </Container>
   );
 }
