@@ -7,13 +7,13 @@ const Chart = ({ data }) => {
       <LineChart
         data={data}
         margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
+          top:10,
+          right: 10, // Adjusted to 0
+          left: -25, // Adjusted to 0
+          
         }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} horizontalFill={['#f5f5f5', '#fff']} fillOpacity={1} />
         <XAxis dataKey="created_at" />
         <YAxis />
         <Tooltip />

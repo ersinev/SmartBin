@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import GarbageAnimation from "./GarbageAnimation";
 import Chart from "./Chart";
+import { Container } from "react-bootstrap";
+import GarbageAnimation from "./GarbageAnimation";
 import WeightData from "./WeightData";
 import SearchBar from "./SearchBar";
-import { Container } from "react-bootstrap";
-
+import PieChart from "./PieChart";
 
 function App() {
   const [adafruitUsername, setAdafruitUsername] = useState("");
@@ -13,11 +13,13 @@ function App() {
   const [adafruitIoKey, setAdafruitIoKey] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [className, setClassName] = useState("");
-  const [capacity, setCapacity] = useState(1000); // Initialize capacity
+  const [capacity, setCapacity] = useState(1000);
   const [fetchingData, setFetchingData] = useState(false);
   const [savedData, setSavedData] = useState([]);
   const [hiddenSections, setHiddenSections] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isPieChartVisible, setPieChartVisible] = useState(false);
+  const [chartButtonText, setChartButtonText] = useState("Chart");
 
   useEffect(() => {
     const storedData = localStorage.getItem("savedData");
@@ -64,12 +66,17 @@ function App() {
     }
   };
 
-  const toggleChart = (index) => {
-    setHiddenSections((prevHiddenSections) =>
-      prevHiddenSections.map((section, i) =>
-        i === index ? { ...section, showChart: !section.showChart } : section
-      )
-    );
+  const toggleChartType = () => {
+    if (chartButtonText === "Chart") {
+      setChartButtonText("PieChart");
+      setPieChartVisible(false);
+    } else if (chartButtonText === "PieChart") {
+      setChartButtonText("Bin");
+      setPieChartVisible(true);
+    } else {
+      setChartButtonText("Chart");
+      setPieChartVisible(false);
+    }
   };
 
   const startFetching = async (data) => {
@@ -79,7 +86,7 @@ function App() {
     setAdafruitUsername(data.adafruitUsername);
     setFeedKey(data.feedKey);
     setAdafruitIoKey(data.adafruitIoKey);
-    setCapacity(data.capacity); // Set capacity from user input
+    setCapacity(data.capacity);
     setHiddenSections((prevHiddenSections) => [
       ...prevHiddenSections,
       { data: { ...data }, weight: 0, showChart: false, chartData: [] },
@@ -103,7 +110,7 @@ function App() {
     setAdafruitUsername("");
     setFeedKey("");
     setAdafruitIoKey("");
-    setCapacity(1000); // Reset capacity after saving
+    setCapacity(1000);
 
     localStorage.setItem("savedData", JSON.stringify(updatedSavedData));
   };
@@ -117,16 +124,6 @@ function App() {
     );
 
     localStorage.setItem("savedData", JSON.stringify(newSavedData));
-  };
-
-  const renderCapacityInput = (data, index) => {
-    return (
-      <input
-        type="number"
-        value={data.capacity}
-        onChange={(e) => handleCapacityChange(index, Number(e.target.value))}
-      />
-    );
   };
 
   return (
@@ -189,7 +186,6 @@ function App() {
             </div>
           </div>
         </div>
-
         <h2>Search Data</h2>
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         <Container fluid>
@@ -213,7 +209,9 @@ function App() {
                       data.schoolName
                         .toLowerCase()
                         .includes(searchTerm.toLowerCase()) ||
-                      data.className.toLowerCase().includes(searchTerm.toLowerCase())
+                      data.className
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
                   )
                   .map((data, index) => (
                     <tr key={index}>
@@ -222,7 +220,18 @@ function App() {
                       <td>{data.adafruitUsername}</td>
                       <td>{data.feedKey}</td>
                       <td>{data.adafruitIoKey}</td>
-                      <td>{renderCapacityInput(data, index)}</td>
+                      <td>
+                        <input
+                          type="number"
+                          value={data.capacity}
+                          onChange={(e) =>
+                            handleCapacityChange(
+                              index,
+                              Number(e.target.value)
+                            )
+                          }
+                        />
+                      </td>
                       <td>
                         <button onClick={() => startFetching(data)}>
                           Start Fetching
@@ -237,7 +246,6 @@ function App() {
             </table>
           </div>
         </Container>
-
         <div className="hidden-sections-container">
           {hiddenSections.map((section, index) => (
             <div key={index} className="hidden-section">
@@ -249,18 +257,17 @@ function App() {
                   {section.data.className}
                 </div>
                 <div className="section-header-buttons">
-                  <button
-                    className="chart-button"
-                    onClick={() => {
-                      if (!section.showChart) {
-                        fetchChartData(section, index);
-                      } else {
-                        toggleChart(index);
-                      }
-                    }}
-                  >
-                    {section.showChart ? "Bin" : "Chart"}
-                  </button>
+                <button
+  className="chart-button"
+  onClick={() => {
+    if (!section.showChart) {
+      fetchChartData(section, index);
+    }
+    toggleChartType();
+  }}
+>
+  {chartButtonText}
+</button>
                   <button
                     className="close-button"
                     onClick={() =>
@@ -273,22 +280,36 @@ function App() {
                   </button>
                 </div>
               </div>
+              <WeightData
+                onWeightChange={(newWeight) =>
+                  handleWeightChange(index, newWeight)
+                }
+                adafruitUsername={section.data.adafruitUsername}
+                feedKey={section.data.feedKey}
+                adafruitIoKey={section.data.adafruitIoKey}
+                fetchingData={fetchingData}
+              />
+              <div
+                className={`chart-container ${
+                  section.showChart ? "visible" : "hidden"
+                }`}
+              >
+                {isPieChartVisible ? (
+                  <PieChart
+                    data={section.chartData}
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                ) : (
+                  <Chart
+                    data={section.chartData}
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                )}
+              </div>
               {section.showChart ? (
-                <Chart
-                  data={section.chartData}
-                  style={{ width: "100%", height: "300px" }}
-                />
+                <></>
               ) : (
                 <>
-                  <WeightData
-                    onWeightChange={(newWeight) =>
-                      handleWeightChange(index, newWeight)
-                    }
-                    adafruitUsername={section.data.adafruitUsername}
-                    feedKey={section.data.feedKey}
-                    adafruitIoKey={section.data.adafruitIoKey}
-                    fetchingData={fetchingData}
-                  />
                   <GarbageAnimation
                     fillPercentage={
                       (section.weight / section.data.capacity) * 100
