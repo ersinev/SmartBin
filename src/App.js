@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import Chart from "./Chart";
 import { Container } from "react-bootstrap";
-import GarbageAnimation from "./GarbageAnimation"
-import WeightData from "./WeightData"
-import SearchBar from "./SearchBar"
-import PieChart from "./PieChart"
-
+import GarbageAnimation from "./GarbageAnimation";
+import WeightData from "./WeightData";
+import SearchBar from "./SearchBar";
+import PieChart from "./PieChart";
 
 function App() {
   const [adafruitUsername, setAdafruitUsername] = useState("");
@@ -55,11 +54,15 @@ function App() {
       );
       const chartData = await response.json();
 
-      setHiddenSections((prevHiddenSections) =>
-        prevHiddenSections.map((s, i) =>
-          i === index ? { ...s, chartData, showChart: true } : s
-        )
-      );
+      if (chartData.length > 0) {
+        const latestData = chartData[0]; // Get the latest chart data point
+        console.log(chartData);
+        setHiddenSections((prevHiddenSections) =>
+          prevHiddenSections.map((s, i) =>
+            i === index ? { ...s, chartData, latestData, showChart: true } : s
+          )
+        );
+      }
     } catch (error) {
       console.error("Error fetching chart data:", error);
     }
@@ -214,7 +217,9 @@ function App() {
                       data.schoolName
                         .toLowerCase()
                         .includes(searchTerm.toLowerCase()) ||
-                      data.className.toLowerCase().includes(searchTerm.toLowerCase())
+                      data.className
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
                   )
                   .map((data, index) => (
                     <tr key={index}>
@@ -228,7 +233,10 @@ function App() {
                         <button onClick={() => startFetching(data)}>
                           Start Fetching
                         </button>
-                        <button onClick={() => deleteSavedData(index)}>
+                        <button style={{backgroundColor:"#ffcc00"}} >
+                          Monthly Chart
+                        </button>
+                        <button style={{backgroundColor:"#ff3333"}} onClick={() => deleteSavedData(index)}>
                           Delete
                         </button>
                       </td>
@@ -275,31 +283,34 @@ function App() {
                 </div>
               </div>
               <WeightData
-                    onWeightChange={(newWeight) =>
-                      handleWeightChange(index, newWeight)
-                    }
-                    adafruitUsername={section.data.adafruitUsername}
-                    feedKey={section.data.feedKey}
-                    adafruitIoKey={section.data.adafruitIoKey}
-                    fetchingData={fetchingData}
-                  />
+                onWeightChange={(newWeight) =>
+                  handleWeightChange(index, newWeight)
+                }
+                adafruitUsername={section.data.adafruitUsername}
+                feedKey={section.data.feedKey}
+                adafruitIoKey={section.data.adafruitIoKey}
+                fetchingData={fetchingData}
+              />
               <div
-                className={`chart-container ${section.showChart ? "visible" : "hidden"}`}
+                className={`chart-container ${
+                  section.showChart ? "visible" : "hidden"
+                }`}
               >
-                
-               
-                  <Chart
-                    
-                    data={section.chartData}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                
+                <Chart
+                  data={section.chartData}
+                  capacity={section.data.capacity}
+                  style={{ width: "100%", height: "100%" }}
+                />
+                {!section.showChart && section.chartData.length > 0 && (
+                  <div className="latest-chart-value">
+                    Latest Value: {section.chartData[0].value}
+                  </div>
+                )}
               </div>
               {section.showChart ? (
                 <></>
               ) : (
                 <>
-                  
                   <GarbageAnimation
                     fillPercentage={
                       (section.weight / section.data.capacity) * 100
@@ -319,7 +330,7 @@ function App() {
         </div>
       </div>
 
-       <PieChart/>               
+      <PieChart />
     </Container>
   );
 }
