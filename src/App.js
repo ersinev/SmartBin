@@ -7,6 +7,8 @@ import WeightData from "./WeightData";
 import SearchBar from "./SearchBar";
 import PieChart from "./PieChart";
 import DataTable from "./DataTable";
+import InputFields from "./InputFields"; 
+
 
 function App() {
   const [adafruitUsername, setAdafruitUsername] = useState("");
@@ -139,61 +141,21 @@ function App() {
       <img src={require("./logo.png")} alt="Logo" />
       <div className="app">
         <h1>Garbage Animations</h1>
-        <div className="input-table">
-          <div className="input-row">
-            <div className="input-cell">
-              <label>School Name</label>
-              <input
-                type="text"
-                value={schoolName}
-                onChange={(e) => setSchoolName(e.target.value)}
-              />
-            </div>
-            <div className="input-cell">
-              <label>Class Name</label>
-              <input
-                type="text"
-                value={className}
-                onChange={(e) => setClassName(e.target.value)}
-              />
-            </div>
-            <div className="input-cell">
-              <label>Adafruit Username</label>
-              <input
-                type="text"
-                value={adafruitUsername}
-                onChange={(e) => setAdafruitUsername(e.target.value)}
-              />
-            </div>
-            <div className="input-cell">
-              <label>Feed Key</label>
-              <input
-                type="text"
-                value={feedKey}
-                onChange={(e) => setFeedKey(e.target.value)}
-              />
-            </div>
-            <div className="input-cell">
-              <label>Adafruit IO Key</label>
-              <input
-                type="text"
-                value={adafruitIoKey}
-                onChange={(e) => setAdafruitIoKey(e.target.value)}
-              />
-            </div>
-            <div className="input-cell">
-              <label>Capacity</label>
-              <input
-                type="number"
-                value={capacity}
-                onChange={(e) => setCapacity(Number(e.target.value))}
-              />
-            </div>
-            <div className="input-cell">
-              <button onClick={saveData}>Save</button>
-            </div>
-          </div>
-        </div>
+        <InputFields
+          schoolName={schoolName}
+          className={className}
+          adafruitUsername={adafruitUsername}
+          feedKey={feedKey}
+          adafruitIoKey={adafruitIoKey}
+          capacity={capacity}
+          setSchoolName={setSchoolName}
+          setClassName={setClassName}
+          setAdafruitUsername={setAdafruitUsername}
+          setFeedKey={setFeedKey}
+          setAdafruitIoKey={setAdafruitIoKey}
+          setCapacity={setCapacity}
+          saveData={saveData}
+        />
 
         <h2>Search Data</h2>
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
