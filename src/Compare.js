@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
-
+import { BsBarChart } from 'react-icons/bs';
 function CompareChart({ chartData }) {
   const colors = chartData.map((_, index) => `hsla(${(index * (360 / chartData.length))}, 70%, 50%, 1)`);
 
@@ -80,7 +80,7 @@ export default function Compare({ savedData }) {
 
   return (
     <>
-      <Button onClick={handleOpenChartModal}>Compare Classes</Button>
+      <Button className='compareBtn' onClick={handleOpenChartModal}><BsBarChart/></Button>
       <Modal
         show={isChartModalOpen}
         onHide={() => setIsChartModalOpen(false)}

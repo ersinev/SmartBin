@@ -207,10 +207,22 @@ button:hover {
 .search-bar {
   margin-bottom: 20px;
 }
-
 .search-input {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; /* Taking the full width of its container */
+  max-width: 400px; /* Adjust if needed */
+  margin: 0 auto; /* This will center the container */
   padding: 5px;
+}
+
+.search-input input {
+  width: 100%; /* Takes full width of its parent .search-input */
+  max-width: 300px; /* Prevents it from becoming too wide */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 
@@ -240,3 +252,20 @@ button:hover {
   display: none; /* Hide when the chart is not active */
 }
 
+.actions-header {
+  position: relative;
+}
+
+.compare-button-container {
+  position: absolute;
+  top: 50%;
+  right: 0;   /* Aligns it to the rightmost side of the 'th' */
+  transform: translateY(-50%);  /* Centers it vertically */
+  
+}
+.compareBtn{
+  background-color: rgb(8, 148, 218);
+}
+.compareBtn:hover{
+  background-color: #3c8103;
+}

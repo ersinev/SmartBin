@@ -6,6 +6,7 @@ function DataTable({
   startFetching,
   renderCapacityInput,
   deleteSavedData,
+  compareButton,
 }) {
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => setShowModal(false);
@@ -21,7 +22,10 @@ function DataTable({
               <th>Feed Key</th>
               <th>Adafruit IO Key</th>
               <th>Capacity</th>
-              <th>Actions</th>
+              <th className="actions-header">
+                Actions
+                <div className="compare-button-container">{compareButton}</div>
+              </th>
             </tr>
           </thead>
           <tbody>

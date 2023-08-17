@@ -3,7 +3,6 @@ import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from "react-bootstrap";
 import SearchBar from "./SearchBar";
-import PieChart from "./PieChart";
 import DataTable from "./DataTable";
 import InputFields from "./InputFields";
 import HiddenSection from "./HiddenSection";
@@ -177,7 +176,7 @@ function App() {
 
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
        
-        <Compare savedData={savedData} />
+        
         <Container fluid>
           <DataTable
             savedData={savedData}
@@ -186,6 +185,7 @@ function App() {
             startFetching={startFetching}
             renderCapacityInput={renderCapacityInput}
             deleteSavedData={deleteSavedData}
+            compareButton={<Compare savedData={savedData} />}
           />
         </Container>
 
@@ -206,7 +206,7 @@ function App() {
         </div>
       </div>
 
-      <PieChart />
+      
     </Container>
   );
 }

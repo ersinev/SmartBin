@@ -2,10 +2,10 @@ import React from "react";
 
 function SearchBar({ searchTerm, onSearchChange }) {
   return (
-    <div className="search-input">
+    <div className="search-input input-cell">
       <h2>Search Data</h2>
       <input
-      className="input"
+        
         type="text"
         placeholder="Search..."
         value={searchTerm}
