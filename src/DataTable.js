@@ -1,8 +1,17 @@
-import React from "react";
-function DataTable({ savedData, searchTerm, onSearchChange, startFetching, renderCapacityInput, deleteSavedData }) {
+import React, { useState } from "react";
+import MonthlyChart from "./MonthlyChart";
+function DataTable({
+  savedData,
+  searchTerm,
+  startFetching,
+  renderCapacityInput,
+  deleteSavedData,
+}) {
+  const [showModal, setShowModal] = useState(false);
+  const handleClose = () => setShowModal(false);
   return (
     <div className="data-table">
-     
+      <div className="table-responsive">
         <table className="scrollable-table">
           <thead>
             <tr>
@@ -19,8 +28,12 @@ function DataTable({ savedData, searchTerm, onSearchChange, startFetching, rende
             {savedData
               .filter(
                 (data) =>
-                  data.schoolName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  data.className.toLowerCase().includes(searchTerm.toLowerCase())
+                  data.schoolName
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                  data.className
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
               )
               .map((data, index) => (
                 <tr key={index}>
@@ -34,7 +47,10 @@ function DataTable({ savedData, searchTerm, onSearchChange, startFetching, rende
                     <button onClick={() => startFetching(data)}>
                       Start Fetching
                     </button>
-                    <button style={{ backgroundColor: "#ffcc00" }}>
+                    <button
+                      style={{ backgroundColor: "#ffcc00" }}
+                      onClick={() => setShowModal(true)}
+                    >
                       Monthly Chart
                     </button>
                     <button
@@ -48,7 +64,8 @@ function DataTable({ savedData, searchTerm, onSearchChange, startFetching, rende
               ))}
           </tbody>
         </table>
-      
+      </div>
+      <MonthlyChart showModal={showModal} handleClose={handleClose} />
     </div>
   );
 }

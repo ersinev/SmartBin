@@ -11,6 +11,7 @@ function HiddenSection({
   handleWeightChange,
   fetchingData,
   setHiddenSections,
+  hiddenSectionsRef
 }) {
   return (
     <div key={index} className="hidden-section">
@@ -45,6 +46,7 @@ function HiddenSection({
         </div>
       </div>
       <WeightData
+        
         onWeightChange={(newWeight) => handleWeightChange(index, newWeight)}
         adafruitUsername={section.data.adafruitUsername}
         feedKey={section.data.feedKey}
@@ -74,7 +76,7 @@ function HiddenSection({
           <GarbageAnimation
             fillPercentage={(section.weight / section.data.capacity) * 100}
           />
-          <p>
+          <p ref={hiddenSectionsRef}> 
             Garbage Fill Percentage:{" "}
             {((section.weight / section.data.capacity) * 100).toFixed(2)}%
           </p>

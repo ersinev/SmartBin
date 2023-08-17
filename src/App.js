@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from "react-bootstrap";
 import SearchBar from "./SearchBar";
 import PieChart from "./PieChart";
 import DataTable from "./DataTable";
 import InputFields from "./InputFields";
 import HiddenSection from "./HiddenSection";
+import Compare from "./Compare";
 
 function App() {
   const [adafruitUsername, setAdafruitUsername] = useState("");
@@ -18,6 +20,9 @@ function App() {
   const [savedData, setSavedData] = useState([]);
   const [hiddenSections, setHiddenSections] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const hiddenSectionsRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
 
   useEffect(() => {
     const storedData = localStorage.getItem("savedData");
@@ -25,6 +30,11 @@ function App() {
       setSavedData(JSON.parse(storedData));
     }
   }, []);
+
+  const handleOpenCompareModal = (data) => {
+    setSelectedClass(data);
+    setShowModal(true);
+  };
 
   const handleWeightChange = (dataIndex, newWeight) => {
     setHiddenSections((prevHiddenSections) =>
@@ -88,6 +98,9 @@ function App() {
       ...prevHiddenSections,
       { data: { ...data }, weight: 0, showChart: false, chartData: [] },
     ]);
+    if (hiddenSectionsRef.current) {
+      hiddenSectionsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const saveData = () => {
@@ -134,8 +147,20 @@ function App() {
   };
 
   return (
-    <Container fluid>
-      <img src={require("./logo.png")} alt="Logo" />
+    <Container
+      fluid
+      className="justify-content-center align-items-center"
+      style={{ height: "100vh" }}
+    >
+      <div className="text-center my-4">
+        {" "}
+        <img
+          src={require("./logo.png")}
+          alt="Logo"
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      </div>
+
       <div className="app">
         <h1>Garbage Animations</h1>
         <InputFields
@@ -154,8 +179,9 @@ function App() {
           saveData={saveData}
         />
 
-        
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+       
+        <Compare savedData={savedData} />
         <Container fluid>
           <DataTable
             savedData={savedData}
@@ -170,6 +196,7 @@ function App() {
         <div className="hidden-sections-container">
           {hiddenSections.map((section, index) => (
             <HiddenSection
+              hiddenSectionsRef={hiddenSectionsRef}
               key={index}
               section={section}
               index={index}

@@ -6,6 +6,7 @@ const WeightData = ({
   feedKey,
   adafruitIoKey,
   fetchingData,
+  
 }) => {
   const [weight, setWeight] = useState(0);
 
@@ -25,6 +26,7 @@ const WeightData = ({
           }
         );
         const data = await response.json();
+        
         
         
         
