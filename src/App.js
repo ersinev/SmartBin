@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import Chart from "./Chart";
 import { Container } from "react-bootstrap";
-import GarbageAnimation from "./GarbageAnimation";
-import WeightData from "./WeightData";
 import SearchBar from "./SearchBar";
 import PieChart from "./PieChart";
 import DataTable from "./DataTable";
-import InputFields from "./InputFields"; 
-
+import InputFields from "./InputFields";
+import HiddenSection from "./HiddenSection";
 
 function App() {
   const [adafruitUsername, setAdafruitUsername] = useState("");
@@ -157,98 +154,31 @@ function App() {
           saveData={saveData}
         />
 
-        <h2>Search Data</h2>
+        
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         <Container fluid>
-        <DataTable
-          savedData={savedData}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          startFetching={startFetching}
-          renderCapacityInput={renderCapacityInput}
-          deleteSavedData={deleteSavedData}
-        />
+          <DataTable
+            savedData={savedData}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            startFetching={startFetching}
+            renderCapacityInput={renderCapacityInput}
+            deleteSavedData={deleteSavedData}
+          />
         </Container>
 
         <div className="hidden-sections-container">
           {hiddenSections.map((section, index) => (
-            <div key={index} className="hidden-section">
-              <div className="section-header">
-                <div className="section-header-school">
-                  <span>{section.data.schoolName}</span>
-                </div>
-                <div className="section-header-class">
-                  {section.data.className}
-                </div>
-                <div className="section-header-buttons">
-                  <button
-                    className="chart-button"
-                    onClick={() => {
-                      if (!section.showChart) {
-                        fetchChartData(section, index);
-                      } else {
-                        toggleChart(index);
-                      }
-                    }}
-                  >
-                    {section.showChart ? "Bin" : "Chart"}
-                  </button>
-                  <button
-                    className="close-button"
-                    onClick={() =>
-                      setHiddenSections((prevHiddenSections) =>
-                        prevHiddenSections.filter((_, i) => i !== index)
-                      )
-                    }
-                  >
-                    X
-                  </button>
-                </div>
-              </div>
-              <WeightData
-                onWeightChange={(newWeight) =>
-                  handleWeightChange(index, newWeight)
-                }
-                adafruitUsername={section.data.adafruitUsername}
-                feedKey={section.data.feedKey}
-                adafruitIoKey={section.data.adafruitIoKey}
-                fetchingData={fetchingData}
-              />
-              <div
-                className={`chart-container ${
-                  section.showChart ? "visible" : "hidden"
-                }`}
-              >
-                <Chart
-                  data={section.chartData}
-                  capacity={section.data.capacity}
-                  style={{ width: "100%", height: "100%" }}
-                />
-                {!section.showChart && section.chartData.length > 0 && (
-                  <div className="latest-chart-value">
-                    Latest Value: {section.chartData[0].value}
-                  </div>
-                )}
-              </div>
-              {section.showChart ? (
-                <></>
-              ) : (
-                <>
-                  <GarbageAnimation
-                    fillPercentage={
-                      (section.weight / section.data.capacity) * 100
-                    }
-                  />
-                  <p>
-                    Garbage Fill Percentage:{" "}
-                    {((section.weight / section.data.capacity) * 100).toFixed(
-                      2
-                    )}
-                    %
-                  </p>
-                </>
-              )}
-            </div>
+            <HiddenSection
+              key={index}
+              section={section}
+              index={index}
+              fetchChartData={fetchChartData}
+              toggleChart={toggleChart}
+              handleWeightChange={handleWeightChange}
+              fetchingData={fetchingData}
+              setHiddenSections={setHiddenSections}
+            />
           ))}
         </div>
       </div>
