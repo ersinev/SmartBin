@@ -1,24 +1,34 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
 
 function CompareChart({ chartData }) {
+  const colors = chartData.map((_, index) => `hsla(${(index * (360 / chartData.length))}, 70%, 50%, 1)`);
+
+  // Find the maximum value in the dataset and add a margin
+  const maxYValue = Math.max(...chartData.map(item => item.uv));
+  const maxYValueWithMargin = maxYValue + 0.2 * maxYValue;
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="className" />
-        <YAxis />
+        <XAxis 
+            dataKey="className" 
+            angle={-30} 
+            textAnchor="end" 
+            interval={0} 
+            height={60}
+        />
+        <YAxis domain={[0, maxYValueWithMargin]} />
         <Tooltip />
-        <Legend />
-        {chartData.map((dataItem, index) => (
-          <Bar
-            key={index}
-            dataKey="uv"
-            data={dataItem.data}
-            fill={`hsla(${(index * (360 / chartData.length))}, 70%, 50%, 1)`}
-          />
-        ))}
+        <Bar dataKey="uv" fill="#8884d8" label={{ position: 'top' }}>
+          {
+            chartData.map((dataItem, index) => (
+              <Cell key={index} fill={colors[index]} />
+            ))
+          }
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   );
@@ -45,10 +55,14 @@ export default function Compare({ savedData }) {
 
           if (response.ok) {
             const data = await response.json();
-            const structuredData = data.filter(item => item && item.value).map(item => ({
-              uv: parseFloat(item.value),
-            }));
-            return { data: structuredData, className: dataItem.className };
+            if (data && data.length > 0) {
+              const firstItem = data[0];
+              return {
+                uv: Math.round(parseFloat(firstItem.value)),
+                className: dataItem.className
+              };
+            }
+            return null;
           } else {
             console.warn(`Failed fetching for ${dataItem.adafruitUsername}/${dataItem.feedKey}`);
             return null;
@@ -61,7 +75,6 @@ export default function Compare({ savedData }) {
     );
 
     const filteredChartData = fetchedChartData.filter(item => item !== null);
-
     setAllFetchedChartData(filteredChartData);
   };
 
