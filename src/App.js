@@ -21,8 +21,7 @@ function App() {
   const [hiddenSections, setHiddenSections] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const hiddenSectionsRef = useRef(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedClass, setSelectedClass] = useState(null);
+
 
   useEffect(() => {
     const storedData = localStorage.getItem("savedData");
@@ -31,10 +30,7 @@ function App() {
     }
   }, []);
 
-  const handleOpenCompareModal = (data) => {
-    setSelectedClass(data);
-    setShowModal(true);
-  };
+
 
   const handleWeightChange = (dataIndex, newWeight) => {
     setHiddenSections((prevHiddenSections) =>
