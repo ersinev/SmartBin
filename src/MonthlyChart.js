@@ -6,6 +6,7 @@ import CalendarChart from './altCharts/CalendarChart';
 
 function MonthlyChart({ data, showModal, handleClose, capacity }) {
   const [chartData, setChartData] = useState(null);
+  
 
   useEffect(() => {
     setChartData(null); 
@@ -56,22 +57,17 @@ function MonthlyChart({ data, showModal, handleClose, capacity }) {
         {chartData ? (
           <Container>
             <Row>
-              <Col md={4}>
-                <SimpleAreaChart chartData={chartData} />
-              </Col>
-              <Col md={4}>
-                <SimpleBarChart chartData={chartData} />
-              </Col>
-              <Col md={4}>
+              <Col md={12}>
                 <CalendarChart chartData={chartData} />
               </Col>
+             
             </Row>
             <Row>
               <Col md={4}>
                 <SimpleAreaChart chartData={chartData} />
               </Col>
               <Col md={4}>
-                <SimpleAreaChart chartData={chartData} />
+              <SimpleBarChart chartData={chartData} />
               </Col>
               <Col md={4}>
                 <SimpleAreaChart chartData={chartData} />

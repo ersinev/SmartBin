@@ -273,6 +273,6 @@ button:hover {
 }
 
 .nivo_calendar {
-  height: 500px; /* Adjust according to your requirements */
+  height: 500px !important; /* Adjust according to your requirements */
 }
 

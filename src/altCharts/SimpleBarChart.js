@@ -19,7 +19,7 @@ function SimpleBarChart({ chartData }) {
         <XAxis dataKey="date" />
         <YAxis />
         <Tooltip />
-        <Bar dataKey="uv" fill="#8884d8" />
+        <Bar dataKey="uv" fill="red" />
       </BarChart>
     </ResponsiveContainer>
   );
