@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import MonthlyChart from "./MonthlyChart";
+import {VscDebugStart} from 'react-icons/vsc'
+import {MdDelete} from 'react-icons/md'
+import {BsPieChart} from 'react-icons/bs'
 function DataTable({
   savedData,
   searchTerm,
@@ -10,11 +13,12 @@ function DataTable({
 }) {
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => setShowModal(false);
+  const [selectedData, setSelectedData] = useState(null);
   return (
     <div className="data-table">
       <div className="table-responsive">
         <table className="scrollable-table">
-          <thead>
+          <thead className="sticky-header">
             <tr>
               <th>School Name</th>
               <th>Class Name</th>
@@ -48,20 +52,28 @@ function DataTable({
                   <td>{data.adafruitIoKey}</td>
                   <td>{renderCapacityInput(data, index)}</td>
                   <td>
+
+                    {/* Start Fetching Button */}
                     <button onClick={() => startFetching(data)}>
-                      Start Fetching
+                    <VscDebugStart/>
                     </button>
+
+                    {/* All Charts Button */}
                     <button
                       style={{ backgroundColor: "#ffcc00" }}
-                      onClick={() => setShowModal(true)}
+                      onClick={() => {
+                        setSelectedData(data);  // This sets the data of the clicked row
+                        setShowModal(true);
+                      }}
                     >
-                      Monthly Chart
+                      <BsPieChart/>
                     </button>
+                    {/* Delete Row Button */}
                     <button
                       style={{ backgroundColor: "#ff3333" }}
                       onClick={() => deleteSavedData(index)}
                     >
-                      Delete
+                      <MdDelete/>
                     </button>
                   </td>
                 </tr>
@@ -69,7 +81,7 @@ function DataTable({
           </tbody>
         </table>
       </div>
-      <MonthlyChart showModal={showModal} handleClose={handleClose} />
+      <MonthlyChart data={selectedData} showModal={showModal} handleClose={handleClose} />
     </div>
   );
 }

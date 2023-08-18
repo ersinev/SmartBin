@@ -145,7 +145,7 @@
   margin-left: 0;
 }
 
-.data-table th,
+
 .data-table td {
   border: 1px solid #555;
   padding: 8px;
@@ -157,6 +157,8 @@
   position: sticky;
   top: 0; /* Stick to the top */
   z-index: 1; /* Ensure header is above other elements */
+  border: 1px solid #555;
+  padding: 8px;
 }
 
 .data-table td {
@@ -267,5 +269,10 @@ button:hover {
   background-color: rgb(8, 148, 218);
 }
 .compareBtn:hover{
-  background-color: #3c8103;
+  background-color: #71c829;
 }
+
+.nivo_calendar {
+  height: 500px; /* Adjust according to your requirements */
+}
+
