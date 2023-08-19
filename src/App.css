@@ -84,6 +84,7 @@
   align-items: flex-end;
   gap: 10px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .input-cell {
@@ -276,3 +277,6 @@ button:hover {
   height: 500px !important; /* Adjust according to your requirements */
 }
 
+.saveBtn{
+  height: 42px;
+}

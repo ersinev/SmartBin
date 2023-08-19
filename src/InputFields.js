@@ -66,7 +66,7 @@ function InputFields({
             onChange={(e) => setCapacity(Number(e.target.value))}
           />
         </div>
-        <div className="input-cell">
+        <div className="input-cell saveBtn">
           <button onClick={saveData}>Save</button>
         </div>
       </div>
