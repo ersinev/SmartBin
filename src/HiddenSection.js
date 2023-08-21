@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "./Chart";
 import WeightData from "./WeightData";
 import GarbageAnimation from "./GarbageAnimation";
@@ -12,7 +12,17 @@ function HiddenSection({
   fetchingData,
   setHiddenSections,
   hiddenSectionsRef
-}) {
+})
+
+{
+  const percentage= ((section.weight / section.data.capacity) * 100).toFixed(2)
+  const [isHidden, setisHidden] = useState(true)
+  useEffect(() => {
+    if(percentage>80){
+      setisHidden(false)
+    }
+  }, [percentage])
+  
   return (
     <div key={index} className="hidden-section">
       <div className="section-header">
@@ -77,9 +87,11 @@ function HiddenSection({
             fillPercentage={(section.weight / section.data.capacity) * 100}
           />
           <p ref={hiddenSectionsRef}> 
-            Garbage Fill Percentage:{" "}
-            {((section.weight / section.data.capacity) * 100).toFixed(2)}%
+            Garbage Fill Percentage:{" "}<span style={{fontSize:"larger", fontWeight:"bolder"}} className="fillPercentage">
+            {percentage}%</span>
+          <p style={{color:"red"}} hidden={isHidden}><span style={{fontWeight:"bolder"}}>WARNING!!!</span> Please empty the trash.</p>
           </p>
+
         </>
       )}
     </div>
