@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Container, Row, Col } from 'react-bootstrap';
-import SimpleAreaChart from './altCharts/SimpleAreaChart';
+//import SimpleAreaChart from './altCharts/SimpleAreaChart';
+//import SimpleFunnelChart from './altCharts/SimpleFunnelChart';
+//import SimpleStreamChart from './altCharts/SimpleStreamChart';
+//import MyResponsiveAreaBump from './altCharts/MyResponsiveAreaBump';
 import SimpleBarChart from './altCharts/SimpleBarChart';
 import CalendarChart from './altCharts/CalendarChart';
-import SimpleFunnelChart from './altCharts/SimpleFunnelChart';
 import SimplePieChart from './altCharts/SimplePieChart';
-import SimpleStreamChart from './altCharts/SimpleStreamChart';
-import MyResponsiveAreaBump from './altCharts/MyResponsiveAreaBump';
 
 
 
@@ -59,7 +59,7 @@ function MonthlyChart({ data, showModal, handleClose, capacity }) {
   return (
     <Modal show={showModal} onHide={handleClose} centered size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Monthly Chart Data</Modal.Title>
+        <Modal.Title>Specific Data For Each Row</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {chartData ? (
