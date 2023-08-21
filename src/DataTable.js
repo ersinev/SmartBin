@@ -60,7 +60,7 @@ function DataTable({
 
                     {/* All Charts Button */}
                     <button
-                      style={{ backgroundColor: "#f2d516" }}
+                      style={{ backgroundColor: "#f2d516"}}
                       onClick={() => {
                         setSelectedData(data);  
                         setShowModal(true);
