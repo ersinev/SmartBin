@@ -1,12 +1,12 @@
-import React from 'react';
-import { ResponsivePie } from '@nivo/pie';
+import React from "react";
+import { ResponsivePie } from "@nivo/pie";
 
 function SimplePieChart({ chartData }) {
   // Convert chartData to match the pie chart format
-  const pieData = chartData.map(item => ({
+  const pieData = chartData.map((item) => ({
     id: item.date,
     label: item.date,
-    value: item.uv
+    value: item.uv,
   }));
 
   return (
@@ -17,20 +17,22 @@ function SimplePieChart({ chartData }) {
         innerRadius={0.5}
         padAngle={0.7}
         cornerRadius={3}
-        activeOuterRadiusOffset={8}
+        enableRadialLabels={false}
+        enableSliceLabels={false}
+        isInteractive={false}
         borderWidth={1}
         borderColor={{
-          from: 'color',
-          modifiers: [['darker', 0.2]]
+          from: "color",
+          modifiers: [["darker", 0.2]],
         }}
         arcLinkLabelsSkipAngle={10}
         arcLinkLabelsTextColor="#333333"
         arcLinkLabelsThickness={2}
-        arcLinkLabelsColor={{ from: 'color' }}
+        arcLinkLabelsColor={{ from: "color" }}
         arcLabelsSkipAngle={10}
         arcLabelsTextColor={{
-          from: 'color',
-          modifiers: [['darker', 2]]
+          from: "color",
+          modifiers: [["darker", 2]],
         }}
         // ... rest of the props
       />
