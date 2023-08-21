@@ -60,7 +60,7 @@ function DataTable({
 
                     {/* All Charts Button */}
                     <button
-                      style={{ backgroundColor: "#ffcc00" }}
+                      style={{ backgroundColor: "#cacf42" }}
                       onClick={() => {
                         setSelectedData(data);  // This sets the data of the clicked row
                         setShowModal(true);
@@ -70,7 +70,7 @@ function DataTable({
                     </button>
                     {/* Delete Row Button */}
                     <button
-                      style={{ backgroundColor: "#ff3333" }}
+                      style={{ backgroundColor: "#cf424b" }}
                       onClick={() => deleteSavedData(index)}
                     >
                       <MdDelete/>

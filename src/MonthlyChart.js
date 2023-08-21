@@ -3,6 +3,14 @@ import { Modal, Container, Row, Col } from 'react-bootstrap';
 import SimpleAreaChart from './altCharts/SimpleAreaChart';
 import SimpleBarChart from './altCharts/SimpleBarChart';
 import CalendarChart from './altCharts/CalendarChart';
+import SimpleFunnelChart from './altCharts/SimpleFunnelChart';
+import SimplePieChart from './altCharts/SimplePieChart';
+import SimpleStreamChart from './altCharts/SimpleStreamChart';
+import MyResponsiveAreaBump from './altCharts/MyResponsiveAreaBump';
+
+
+
+
 
 function MonthlyChart({ data, showModal, handleClose, capacity }) {
   const [chartData, setChartData] = useState(null);
@@ -63,15 +71,13 @@ function MonthlyChart({ data, showModal, handleClose, capacity }) {
              
             </Row>
             <Row>
-              <Col md={4}>
-                <SimpleAreaChart chartData={chartData} />
+              <Col md={7}>
+              <SimplePieChart chartData={chartData} />
               </Col>
-              <Col md={4}>
-              <SimpleBarChart chartData={chartData} />
+              <Col md={5}>
+                <SimpleBarChart chartData={chartData} />
               </Col>
-              <Col md={4}>
-                <SimpleAreaChart chartData={chartData} />
-              </Col>
+             
             </Row>
           </Container>
         ) : (

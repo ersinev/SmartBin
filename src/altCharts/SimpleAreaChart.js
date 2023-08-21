@@ -16,7 +16,7 @@ function SimpleAreaChart({ chartData }) {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis domain={[0, 'auto']} />
+        <YAxis domain={[0, 'dataMax']} />
         <Tooltip />
         <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
       </AreaChart>
