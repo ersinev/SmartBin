@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer, LabelList } from 'recharts';
 import { BsBarChart } from 'react-icons/bs';
+
+const CustomBarLabel = (props) => {
+  const { x, y, width, value } = props;
+  const xOffset = x + width / 2;
+  const yOffset = y - 10; 
+  return (
+    <text style={{fontWeight:"bolder"}} x={xOffset} y={yOffset} fill="red" textAnchor="middle" dy={-6}>
+      {value}
+    </text>
+  );
+};
+
 function CompareChart({ chartData }) {
   const colors = chartData.map((_, index) => `hsla(${(index * (360 / chartData.length))}, 70%, 50%, 1)`);
 
-  // Find the maximum value in the dataset and add a margin
   const maxYValue = Math.max(...chartData.map(item => item.uv));
   const maxYValueWithMargin = maxYValue + 0.2 * maxYValue;
 
@@ -22,12 +33,13 @@ function CompareChart({ chartData }) {
         />
         <YAxis domain={[0, maxYValueWithMargin]} />
         <Tooltip />
-        <Bar dataKey="uv" fill="#8884d8" label={{ position: 'top' }}>
+        <Bar dataKey="uv" fill="#8884d8">
           {
             chartData.map((dataItem, index) => (
               <Cell key={index} fill={colors[index]} />
             ))
           }
+          <LabelList dataKey="uv" content={<CustomBarLabel />} />
         </Bar>
       </BarChart>
     </ResponsiveContainer>

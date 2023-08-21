@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import SearchBar from "./SearchBar";
 import DataTable from "./DataTable";
@@ -21,15 +21,12 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const hiddenSectionsRef = useRef(null);
 
-
   useEffect(() => {
     const storedData = localStorage.getItem("savedData");
     if (storedData) {
       setSavedData(JSON.parse(storedData));
     }
   }, []);
-
-
 
   const handleWeightChange = (dataIndex, newWeight) => {
     setHiddenSections((prevHiddenSections) =>
@@ -148,11 +145,31 @@ function App() {
       style={{ height: "100vh" }}
     >
       <div className="text-center my-4">
-        {" "}
+        <img
+          src={require("./garbage3.png")}
+          alt="Garbage"
+          style={{
+            maxWidth: "100%",
+            height: "200px",
+            borderRadius: "40px",
+            transform: "rotate(-10deg)",
+          }}
+        />
         <img
           src={require("./logo.png")}
           alt="Logo"
           style={{ maxWidth: "100%", height: "auto" }}
+        />
+        <img
+          src={require("./garbage3.png")}
+          alt="Garbage"
+          style={{
+            maxWidth: "100%",
+            height: "200px",
+            borderRadius: "40px",
+            transform: "rotate(10deg)",
+            
+          }}
         />
       </div>
 
@@ -175,8 +192,7 @@ function App() {
         />
 
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-       
-        
+
         <Container fluid>
           <DataTable
             savedData={savedData}
@@ -205,8 +221,6 @@ function App() {
           ))}
         </div>
       </div>
-
-      
     </Container>
   );
 }
