@@ -149,7 +149,7 @@
 .data-table tbody {
   display: block;
   max-height: 300px;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .data-table tr {
