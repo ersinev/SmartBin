@@ -258,6 +258,10 @@ button:hover {
   display: block;
 }
 
+.table-responsive, .scrollable-table {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
 .hidden {
   display: none;
 }
@@ -309,6 +313,7 @@ button:hover {
   button {
       padding: 6px 12px;
       font-size: 0.9rem;
+      
   }
 }
 
@@ -316,7 +321,9 @@ button:hover {
   button {
       padding: 4px 8px;
       font-size: 0.8rem;
+      margin: 1px;
   }
+ 
 }
 
 @media (max-width: 768px) {
