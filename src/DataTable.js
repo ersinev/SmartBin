@@ -18,7 +18,7 @@ function DataTable({
   return (
     <div className="data-table">
       <div className="table-responsive">
-        <table className="scrollable-table">
+        <table className="table scrollable-table">
           <thead className="sticky-header">
             <tr>
               <th>School Name</th>

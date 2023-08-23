@@ -41,7 +41,7 @@ function SimpleBarChart({ chartData, capacity }) {
         margin={{
           top: 10,
           right: 10,
-          left: 10,
+          left: 20, // Increase left margin to accommodate Y-axis labels better
         }}
       >
         <CartesianGrid
@@ -55,11 +55,13 @@ function SimpleBarChart({ chartData, capacity }) {
           ticks={yAxisTicks}
           domain={[0, capacity]}
           tick={{ fontSize: 12 }}
-          width={40} // added width to make sure the scale numbers have enough space
+          tickLine={{ stroke: '#666', strokeWidth: 0.5 }}
+          axisLine={{ stroke: '#666', strokeWidth: 1 }}
+          width={50} // Increase the width to ensure there's enough room for the ticks
         />
         <Tooltip />
         <Legend />
-        <Bar dataKey="uv" fill="orange" /> {/* Color set to light green */}
+        <Bar dataKey="uv" fill="#90EE90" /> {/* Light Green Color */}
         <ReferenceLine
           y={referenceValue}
           stroke="blue"

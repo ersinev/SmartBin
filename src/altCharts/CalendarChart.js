@@ -14,6 +14,7 @@ const CalendarChart = ({ chartData }) => {
   return (
     <div style={{ height: '300px' }}>
     <ResponsiveCalendar
+      
       data={transformedData}
       from={minDate}
       to={toDate}
