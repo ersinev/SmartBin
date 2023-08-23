@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import MonthlyChart from "./MonthlyChart";
-import {VscDebugStart} from 'react-icons/vsc'
-import {MdDelete} from 'react-icons/md'
-import {BsPieChart} from 'react-icons/bs'
+import { VscDebugStart } from "react-icons/vsc";
+import { MdDelete } from "react-icons/md";
+import { BsPieChart } from "react-icons/bs";
+import { Button } from "react-bootstrap";
 function DataTable({
   savedData,
   searchTerm,
@@ -51,37 +52,46 @@ function DataTable({
                   <td>{data.feedKey}</td>
                   <td>{data.adafruitIoKey}</td>
                   <td>{renderCapacityInput(data, index)}</td>
-                  <td>
-
+                  <td className="button-container">
+                    
                     {/* Start Fetching Button */}
-                    <button onClick={() => startFetching(data)}>
-                    <VscDebugStart/>
-                    </button>
-
+                    <Button
+                      className="table-button"
+                      onClick={() => startFetching(data)}
+                    >
+                      <VscDebugStart />
+                    </Button>
                     {/* All Charts Button */}
-                    <button
-                      style={{ backgroundColor: "#f2d516"}}
+                    <Button
+                      className="table-button"
+                      style={{ backgroundColor: "#f2d516" }}
                       onClick={() => {
-                        setSelectedData(data);  
+                        setSelectedData(data);
                         setShowModal(true);
                       }}
                     >
-                      <BsPieChart/>
-                    </button>
+                      <BsPieChart />
+                    </Button>
                     {/* Delete Row Button */}
-                    <button
+                    <Button
+                      className="table-button"
                       style={{ backgroundColor: "#fc3f4c" }}
                       onClick={() => deleteSavedData(index)}
                     >
-                      <MdDelete/>
-                    </button>
+                      <MdDelete />
+                    </Button>
+                   
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
-      <MonthlyChart data={selectedData} showModal={showModal} handleClose={handleClose} />
+      <MonthlyChart
+        data={selectedData}
+        showModal={showModal}
+        handleClose={handleClose}
+      />
     </div>
   );
 }

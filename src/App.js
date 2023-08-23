@@ -174,7 +174,7 @@ function App() {
       </div>
 
       <div className="app">
-        <h1>Garbage Animations</h1>
+        <h1>Smart Bin Project</h1>
         <InputFields
           schoolName={schoolName}
           className={className}

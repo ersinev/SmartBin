@@ -5,12 +5,12 @@ const CalendarChart = ({ chartData }) => {
     day: item.date,
     value: item.uv
   })) : [];
-
+  
   const minDate = transformedData.length > 0 ? transformedData.reduce((min, item) => (item.day < min ? item.day : min), transformedData[0].day) : new Date().toISOString().split('T')[0];
   
   const toDate = new Date(minDate);
   toDate.setFullYear(toDate.getFullYear());
-  
+  console.log(transformedData)
   return (
     <div style={{ height: '300px' }}>
     <ResponsiveCalendar

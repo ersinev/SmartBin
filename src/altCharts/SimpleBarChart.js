@@ -1,41 +1,47 @@
 import React from 'react';
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ReferenceLine
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  ResponsiveContainer, ReferenceLine
 } from 'recharts';
 
 function SimpleBarChart({ chartData, capacity }) {
-  const reversedData = [...chartData].reverse();
 
-  // Get the required data point value for the reference line
+  // 1. Filter data for the last 30 days
+  const today = new Date();
+  const thirtyDaysAgo = new Date(today);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const filteredData = chartData.filter(data => {
+    const dataDate = new Date(data.date);
+    return dataDate >= thirtyDaysAgo && dataDate <= today;
+  });
+
+  // 2. Get the first data point for each day
+  const firstDataForDate = new Map();
+  filteredData.forEach(item => {
+    if (!firstDataForDate.has(item.date)) {
+      firstDataForDate.set(item.date, item);
+    }
+  });
+  let reducedData = Array.from(firstDataForDate.values());
+
+  // Sort the data from oldest to newest
+  reducedData = reducedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
   const referenceValue =
-    reversedData.length > 0 ? reversedData[reversedData.length - 1].uv : 0;
+    reducedData.length > 0 ? reducedData[reducedData.length - 1].uv : 0;
 
-  // Generate ticks for YAxis
-  const yAxisTicks = [
-    0,
-    capacity / 5,
-    (2 * capacity)/ 5,
-    (3 * capacity) / 5,
-    (4 * capacity) / 5,
-    capacity,
-  ];
+  // Enhanced Y-axis ticks for better granularity
+  const yAxisTicks = Array.from({ length: 6 }).map((_, i) => (capacity / 5) * i);
 
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
-        data={reversedData}
+        data={reducedData}
         margin={{
           top: 10,
           right: 10,
-          left: 10,  // Adjusted this margin to match the LineChart's style
+          left: 10,
         }}
       >
         <CartesianGrid
@@ -49,12 +55,11 @@ function SimpleBarChart({ chartData, capacity }) {
           ticks={yAxisTicks}
           domain={[0, capacity]}
           tick={{ fontSize: 12 }}
+          width={40} // added width to make sure the scale numbers have enough space
         />
         <Tooltip />
         <Legend />
-        <Bar dataKey="uv" fill="red" />
-
-        {/* Adding the reference line at the required data point's value */}
+        <Bar dataKey="uv" fill="orange" /> {/* Color set to light green */}
         <ReferenceLine
           y={referenceValue}
           stroke="blue"
