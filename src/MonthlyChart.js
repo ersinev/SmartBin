@@ -66,7 +66,7 @@ function MonthlyChart({ data, showModal, handleClose, capacity }) {
           <Container fluid>
             <Row>
               <Col md={12}>
-                <CalendarChart chartData={chartData} />
+                <CalendarChart  chartData={chartData} />
               </Col>
              
             </Row>
