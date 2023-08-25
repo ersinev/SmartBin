@@ -168,7 +168,6 @@ function App() {
             height: "200px",
             borderRadius: "40px",
             transform: "rotate(10deg)",
-            
           }}
         />
       </div>
