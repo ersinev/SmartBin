@@ -18,7 +18,7 @@ const GarbageAnimation = ({ fillPercentage }) => {
     "#FF7B7B",
     "#FF7F7F",
     "#FF9C9C",
-    "#FFBABA"
+    "#FFBABA",
   ];
   const capsules = [];
   for (let i = 0; i < capsuleCount; i++) {
