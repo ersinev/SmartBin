@@ -25,6 +25,7 @@ const WeightData = ({
           }
         );
         const data = await response.json();
+        console.log(data)
 
         if (data.length > 0) {
           const latestData = data[0];
